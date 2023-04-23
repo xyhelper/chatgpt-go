@@ -19,6 +19,7 @@ type ChatText struct {
 	ConversationID string // conversation context id
 	MessageID      string // current message id, can used as next chat's parent_message_id
 	Content        string // text content
+	Role           string // role
 }
 
 // ChatStream chat reply with sream
@@ -119,6 +120,7 @@ func (c *Client) parseChatText(text string) (*ChatText, error) {
 	conversationID := res.Get("conversation_id").String()
 	messageID := res.Get("message.id").String()
 	content := res.Get("message.content.parts.0").String()
+	role := res.Get("message.author.role").String()
 
 	if conversationID == "" || messageID == "" {
 		return nil, fmt.Errorf("invalid chat text")
@@ -129,6 +131,7 @@ func (c *Client) parseChatText(text string) (*ChatText, error) {
 		ConversationID: conversationID,
 		MessageID:      messageID,
 		Content:        content,
+		Role:           role,
 	}, nil
 }
 
